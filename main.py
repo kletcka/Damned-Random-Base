@@ -1,5 +1,3 @@
-
-import copy
 from tkinter import * 
 import os
 from tkinter.ttk import *
@@ -14,6 +12,35 @@ import io
 import time
 import datetime
 
+#заполнение бд
+
+person = mimesis.Person("ru")
+rus_person = Rsp()
+date = mimesis.Datetime()
+adress = mimesis.Address("ru")
+
+for i in range(5): 
+    gender = person.gender()
+    gender_opt = Gender.MALE
+    if gender == "Жен.":
+        gender_opt = Gender.FEMALE
+    person_id = base.get_last_id()
+    surname = person.surname(gender=gender_opt)
+    name = person.first_name(gender=gender_opt)
+    patronymic = rus_person.patronymic(gender=gender_opt)
+    birthday = date.date(start=1960, end=2021)
+    adr = adress.city() + " " + adress.address()
+    phone = person.telephone()
+    email = person.email()
+    img=image_l.get_avatar()
+    image = sqlite3.Binary(img)
+    l =[person_id, surname, name, patronymic, gender, birthday, adr, phone, email, image]
+    base.ins(l)
+    time.sleep(1)
+
+
+
+#основная часть, функции
 
 
 def get_page_people(id):
@@ -40,7 +67,7 @@ def t():
             get_page_people(i[0])
             break
 
-
+#основная часть, переменные
 
 window = Tk()
 root = Tk()
@@ -48,10 +75,6 @@ window.geometry("800x500")
 
 now = datetime.datetime.now()
 year = int(now.year)
-person = mimesis.Person("ru")
-rus_person = Rsp()
-date = mimesis.Datetime()
-adress = mimesis.Address("ru")
 r = ["None"] + base.get_families()
 variable = StringVar(root)
 variable.set(r[0])
@@ -75,26 +98,7 @@ dwd = {
 
 
 
-for i in range(30): 
-    gender = person.gender()
-    gender_opt = Gender.MALE
-    if gender == "Жен.":
-        gender_opt = Gender.FEMALE
-    person_id = base.get_last_id()
-    surname = person.surname(gender=gender_opt)
-    name = person.first_name(gender=gender_opt)
-    patronymic = rus_person.patronymic(gender=gender_opt)
-    birthday = date.date(start=1960, end=2021)
-    adr = adress.city() + " " + adress.address()
-    phone = person.telephone()
-    email = person.email()
-    img=image_l.get_avatar()
-    image = sqlite3.Binary(img)
-    l =[person_id, surname, name, patronymic, gender, birthday, adr, phone, email, image]
-    base.ins(l)
-    time.sleep(1)
-
-
+#основная часть, размещение объектов
 
 
 dwd["image"].place(x=0,y=0)
